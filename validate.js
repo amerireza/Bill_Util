@@ -30,7 +30,7 @@ function isPayIdValid(billId, payId){
 	payId = normaliseInput(payId);
 	chkDigit1 = payId.substring(payId.length-2,payId.length-1);
 	chkDigit2 = payId.substring(payId.length-1,payId.length);
-	
+
 	chksum = genrateChksum(payId.substring(0,payId.length-2));
 	if(chksum == chkDigit1){
 		chksum = genrateChksum(billId + payId.substring(0,payId.length-1))
@@ -47,3 +47,23 @@ function normaliseInput(value){
 	value=Number(value).toString();
 	return value;
 }
+
+function createBillId(profile, companyCode, serviceCode){
+
+  var tmpBillId = normaliseInput(profile) + companyCode + serviceCode;
+  return tmpBillId + genrateChksum(tmpBillId);
+}
+
+function createPayId(billId, amount, period, year){
+  if(period.length !== 2)
+    return null;
+  if(year.length !== 1)
+    return null;
+  amount = amount.substring(0, amount.length-3);
+
+  var chkDigit1 = genrateChksum(amount + year + period);
+  var chkDigit2 = genrateChksum(billId + amount + year + period + chkDigit1);
+
+  return amount + year + period + chkDigit1 + chkDigit2;
+}
+
