@@ -56,9 +56,19 @@ function createBillId(profile, companyCode, serviceCode){
 
 function createPayId(billId, amount, period, year){
   if(period.length !== 2)
-    return null;
+  {
+		if(period.length === 1)
+			period = '0' + period;
+		else
+			return null;
+	}
   if(year.length !== 1)
-    return null;
+	{
+		if(year.length === 2)
+			year = year[year.length - 1];
+		else
+			return null;
+	}
   amount = amount.substring(0, amount.length-3);
 
   var chkDigit1 = genrateChksum(amount + year + period);
@@ -67,3 +77,6 @@ function createPayId(billId, amount, period, year){
   return amount + year + period + chkDigit1 + chkDigit2;
 }
 
+console.log(createBillId("22085730","001","4"));
+console.log(createPayId("8803144800146", "320387", "1", "96"));
+console.log(isBillIdValid("2208573000142"));
